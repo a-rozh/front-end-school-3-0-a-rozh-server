@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Radio Test</title>
+        <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    </head>
+    <body>
+        <h1>Radio Test</h1>
+
+        <button onclick="startRadio()">Start Radio</button>
+        <button onclick="stopRadio()">Stop Radio</button>
+
+        <p>Status: <span id="status">Stopped</span></p>
+        <p>Current Track: <span id="track">-</span></p>
+
+        <script>
+            const socket = io('http://localhost:8000');
+
+            socket.on('radio:status', (isPlaying) => {
+                document.getElementById('status').textContent = isPlaying
+                    ? 'Playing'
+                    : 'Stopped';
+            });
+
+            socket.on('radio:track', (audioFile) => {
+                document.getElementById('track').textContent = audioFile;
+            });
+
+            function startRadio() {
+                socket.emit('radio:start');
+            }
+
+            function stopRadio() {
+                socket.emit('radio:stop');
+            }
+        </script>
+    </body>
+</html>
